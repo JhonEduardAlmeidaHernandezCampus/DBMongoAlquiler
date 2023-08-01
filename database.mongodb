@@ -1,0 +1,327 @@
+// Create Database & Tables ----------------------------------
+use("db_campus_alquiler");
+
+db.createCollection("sucursal");
+db.createCollection("automovil");
+db.createCollection("cliente");
+db.createCollection("empleado");
+db.createCollection("alquiler");
+db.createCollection("sucursal_automovil");
+db.createCollection("reserva");
+db.createCollection("registro_devolucion");
+db.createCollection("registro_entrega");
+// -----------------------------------------------------------
+
+// Insert Data Tables ---------------------------------------------------------
+use("db_campus_alquiler");
+db.sucursal.insertOne(
+    {
+        _id: ObjectId(1), // Si se quita el object no genera una clave,
+        _ID_Sucursal: 1,
+        Nombre: "Casa Blanca",
+        Direccion: "Estados Unidos",
+        Telefono: 1521541453
+    }
+)
+
+use("db_campus_alquiler");
+db.automovil.insertOne(
+    {
+        _ID_Automovil: 1,
+        Marca: "Chevrolet",
+        Modelo: 2023,
+        Anio: 2023,
+        Tipo: "Mecanico",
+        Capacidad: "5 personas",
+        Precio_Diario: "220.000"
+    }
+)
+
+use("db_campus_alquiler");
+db.cliente.insertOne(
+    {
+        _ID_Cliente: 1,
+        Nombre: "Jhon",
+        Apellido: "Hernandez",
+        DNI: 1102312327,
+        Direccion: "Piedecuesta - Santander",
+        Telefono: "=57 3005559677",
+        Email: "JhonHernandez.1899@gmail.com"
+    }
+)
+
+use("db_campus_alquiler");
+db.empleado.insertOne(
+    {
+        _ID_Empleado: 1,
+        Nombre: "Ricardo",
+        Apellido: "Arjona",
+        DNI: 1231312332,
+        Direccion: "Miami Estados Unidos",
+        Telefono: 1239912393,
+        Cargo: "Administrador Tienda"
+    }
+)
+
+use("db_campus_alquiler");
+db.alquiler.insertOne(
+    {
+        _ID_Alquiler: ObjectId(1),
+        ID_Cliente_ID_Cliente: 1,
+        ID_Automovil_ID_Automovil: 1,
+        Fecha_Inicio: ObjectId(1).getTimestamp(), // Campo para poner la fecha
+        Fecha_Fin: "2023-08-12",
+        Costo_Total: "1'200.000",
+        Estado: "Activo"
+    }
+)
+
+use("db_campus_alquiler");
+db.sucursal_automovil.insertOne(
+    {
+        ID_Sucursal_ID_Sucursal: 1,
+        ID_Automovil_ID_Automovil: 1,
+        Cantidad_Disponible: 15
+    }
+)
+
+use("db_campus_alquiler");
+db.reserva.insertOne(
+    {
+        ID_Reserva: ObjectId(1),
+        ID_Cliente_ID_Cliente: 1,
+        ID_Automovil_ID_Automovil: 1,
+        Fecha_Reserva: "2023-08-15",
+        Fecha_Inicio: "2023-08-16",
+        Fecha_Fin: "2023-08-23",
+        Estado: "Activo"
+    }
+)
+
+use("db_campus_alquiler");
+db.registro_devolucion.insertOne(
+    {
+        ID_Registro: ObjectId(1),
+        ID_Alquiler_ID_Alquiler: ObjectId("00000001524014677a4c9fc2"),
+        ID_Empleado_ID_Empleado: 1,
+        Fecha_Devolucion: "2023-08-24",
+        Combustible_Devuelto: "2 Galones",
+        Kilometraje_Devuelto: "1.200",
+        Monto_Adicional: "0"
+    }
+)
+
+use("db_campus_alquiler");
+db.registro_entrega.insertOne(
+    {
+        ID_Registro: ObjectId(1),
+        ID_Alquiler_ID_Alquiler: ObjectId("00000001524014677a4c9fc2"),
+        ID_Empleado_ID_Empleado: 1,
+        Fecha_Entrega: "2023-08-12",
+        Combustible_Entregado: "12 Galones",
+        Kilometraje_Entregado: "0"
+    }
+)
+// ---------------------------------------------------------------------------------
+
+// Relaciones -----------------------------------------------------
+use("db_campus_alquiler");
+db.getCollection("sucursal").aggregate([
+    {
+        $lookup: {
+            from: "sucursal_automovil", // Tabla Hijo
+            localField: "ID_Sucursal_ID_Sucursal", // Campo de la tabla hijo
+            foreignField: "_ID_Sucursal", // Campo de la tabla padre
+            as: "fk_sucursal_sucursal_automovil"
+        }
+    },
+    {
+        $project: {
+            _id: 0,
+            Nombre: 1,
+            "fk_sucursal_sucursal_automovil._id": 1,
+            "fk_sucursal_sucursal_automovil.Cantidad_Disponible": 1,
+        }
+    }
+])
+
+use("db_campus_alquiler");
+db.getCollection("automovil").aggregate([
+    {
+        $lookup: {
+            from: "sucursal_automovil",
+            localField: "ID_Automovil_ID_Automovil",
+            foreignField: "_ID_Automovil",
+            as: "fk_automovil_sucursal_automovil"
+        }
+    },
+    {
+        $lookup: {
+            from: "reserva",
+            localField: "ID_Automovil_ID_Automovil",
+            foreignField: "_ID_Automovil",
+            as: "fk_automovil_reserva"
+        }
+    },
+    {
+        $lookup: {
+            from: "alquiler",
+            localField: "ID_Automovil_ID_Automovil",
+            foreignField: "_ID_Automovil",
+            as: "fk_automovil_alquiler"
+        }
+    },
+    {
+        $project: {
+            _id: 0,
+            _ID_Automovil: 1,
+            Marca: 1,
+            Modelo: 1,
+            Anio: 1,
+            "fk_automovil_sucursal_automovil._ID_Sucursal": 1,
+            "fk_automovil_sucursal_automovil.Cantidad_Disponible": 1,
+
+            "fk_automovil_reserva.ID_Reserva": 1,
+            "fk_automovil_reserva.Fecha_Reserva": 1,
+            "fk_automovil_reserva.Fecha_Inicio": 1,
+            "fk_automovil_reserva.Fecha_Fin": 1,
+            "fk_automovil_reserva.Estado": 1,
+
+            "fk_automovil_alquiler.ID_Alquiler": 1,
+            "fk_automovil_alquiler.Fecha_Inicio": 1,
+            "fk_automovil_alquiler.Fecha_Fin": 1,
+            "fk_automovil_alquiler.Costo_Total": 1,
+            "fk_automovil_alquiler.Estado": 1
+        }
+    }
+])
+
+use("db_campus_alquiler");
+db.getCollection("cliente").aggregate([
+    {
+        $lookup: {
+            from: "reserva",
+            localField: "_ID_Cliente",
+            foreignField: "ID_Cliente_ID_Cliente",
+            as: "fk_cliente_reserva"
+        }
+    },
+    {
+        $lookup: {
+            from: "alquiler",
+            localField: "_ID_Cliente",
+            foreignField: "ID_Cliente_ID_Cliente",
+            as: "fk_cliente_alquiler"
+        }
+    },
+    {
+        $project: {
+            _id: 0,
+            _ID_Cliente: 1,
+            Nombre: 1,
+            Apellido: 1,
+            DNI: 1,
+            Telefono: 1,
+
+            "fk_cliente_reserva.ID_Reserva": 1,
+            "fk_cliente_reserva.Fecha_Reserva": 1,
+            "fk_cliente_reserva.Fecha_Inicio": 1,
+            "fk_cliente_reserva.Fecha_Fin": 1,
+            "fk_cliente_reserva.Estado": 1,
+
+            "fk_cliente_alquiler.ID_Alquiler": 1,
+            "fk_cliente_alquiler.Fecha_Inicio": 1,
+            "fk_cliente_alquiler.Fecha_Fin": 1,
+            "fk_cliente_alquiler.Costo_Total": 1,
+            "fk_cliente_alquiler.Estado": 1
+        }
+    }
+])
+
+use("db_campus_alquiler");
+db.getCollection("empleado").aggregate([
+    {
+        $lookup: {
+            from: "registro_entrega",
+            localField: "ID_Empleado_ID_Empleado",
+            foreignField: "_ID_Empleado",
+            as: "fk_empleado_registro_entrega"
+        }
+    },
+    {
+        $lookup: {
+            from: "registro_devolucion",
+            localField: "ID_Empleado_ID_Empleado",
+            foreignField: "_ID_Empleado",
+            as: "fk_empleado_registro_devolucion"
+        }
+    },
+    {
+        $project: {
+            _id: 0,
+            _ID_Empleado: 1,
+            Nombre: 1,
+            Apellido: 1,
+            DNI: 1,
+            Telefono: 1,
+
+            "fk_empleado_registro_entrega.ID_Registro": 1,
+            "fk_empleado_registro_entrega.Fecha_Entrega": 1,
+            "fk_empleado_registro_entrega.Combustible_Entregado": 1,
+            "fk_empleado_registro_entrega.Kilometraje_Entregado": 1,
+
+            "fk_empleado_registro_devolucion.ID_Registro": 1,
+            "fk_empleado_registro_devolucion.Fecha_Devolucion": 1,
+            "fk_empleado_registro_devolucion.Combustible_Devuelto": 1,
+            "fk_empleado_registro_devolucion.Kilometraje_Devuelto": 1,
+            "fk_empleado_registro_devolucion.Monto_Adicional": 1
+        }
+    }
+])
+
+use("db_campus_alquiler");
+db.getCollection("alquiler").aggregate([
+    {
+        $lookup: {
+            from: "registro_entrega",
+            localField: "ID_Alquiler_ID_Alquiler",
+            foreignField: "_ID_Alquiler",
+            as: "fk_alquiler_registro_entrega"
+        }
+    },
+    {
+        $lookup: {
+            from: "registro_devolucion",
+            localField: "ID_Alquiler_ID_Alquiler",
+            foreignField: "_ID_Alquiler",
+            as: "fk_alquiler_registro_devolucion"
+        }
+    },
+    {
+        $project: {
+            _id: 0,
+            _ID_Alquiler: 1,
+            _ID_Cliente: 1,
+            _ID_Automovil: 1,
+            Fecha_Inicio: 1,
+            Fecha_Fin: 1,
+            Costo_Total: 1,
+            Estado: 1,
+
+            "fk_alquiler_registro_entrega.ID_Registro": 1,
+            "fk_alquiler_registro_entrega.Fecha_Entrega": 1,
+            "fk_alquiler_registro_entrega.Combustible_Entregado": 1,
+            "fk_alquiler_registro_entrega.Kilometraje_Entregado": 1,
+
+            "fk_alquiler_registro_devolucion.ID_Registro": 1,
+            "fk_alquiler_registro_devolucion.Fecha_Devolucion": 1,
+            "fk_alquiler_registro_devolucion.Combustible_Devuelto": 1,
+            "fk_alquiler_registro_devolucion.Kilometraje_Devuelto": 1,
+            "fk_alquiler_registro_devolucion.Monto_Adicional": 1
+        }
+    }
+])
+
+use("db_campus_alquiler");
+db.sucursal_automovil.find()
+// ----------------------------------------------------------------
