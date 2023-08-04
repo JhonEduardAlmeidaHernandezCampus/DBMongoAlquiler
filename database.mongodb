@@ -81,7 +81,7 @@ db.automovil.insertMany(
             Modelo: 2024,
             Anio: 2023,
             Tipo: "Automatico - Mecanico",
-            Capacidad: 3,
+            Capacidad: 5,
             Precio_Diario: "1'220.000"
         },
         {
@@ -231,7 +231,7 @@ db.alquiler.insertMany(
         {
             _ID_Alquiler: 3,
             ID_Cliente_ID_Cliente: 2,
-            ID_Automovil_ID_Automovil: 4,
+            ID_Automovil_ID_Automovil: 3,
             Fecha_Inicio: "2023-07-05",
             Fecha_Fin: "2023-08-20",
             Costo_Total: "1'500.000",
@@ -250,6 +250,15 @@ db.alquiler.insertMany(
             _ID_Alquiler: 5,
             ID_Cliente_ID_Cliente: 3,
             ID_Automovil_ID_Automovil:  5,
+            Fecha_Inicio: "2023-08-02",
+            Fecha_Fin: "2023-08-09",
+            Costo_Total: "1'000.000",
+            Estado: "Activo"
+        },
+        {
+            _ID_Alquiler: 5,
+            ID_Cliente_ID_Cliente: 3,
+            ID_Automovil_ID_Automovil:  3,
             Fecha_Inicio: "2023-08-02",
             Fecha_Fin: "2023-08-09",
             Costo_Total: "1'000.000",
@@ -350,6 +359,15 @@ db.reserva.insertMany(
             ID_Reserva: 7,
             ID_Cliente_ID_Cliente: 4,
             ID_Automovil_ID_Automovil: 4,
+            Fecha_Reserva: "2023-08-18",
+            Fecha_Inicio: "2023-08-24",
+            Fecha_Fin: "2023-08-31",
+            Estado: "Pendiente"
+        },
+        {
+            ID_Reserva: 8,
+            ID_Cliente_ID_Cliente: 4,
+            ID_Automovil_ID_Automovil: 3,
             Fecha_Reserva: "2023-08-18",
             Fecha_Inicio: "2023-08-24",
             Fecha_Fin: "2023-08-31",
@@ -779,5 +797,93 @@ db.alquiler.countDocuments({}); // Metodo para contar la cantidad de registros e
 
 // 19.Mostrar los automóviles con capacidad igual a 5 personas y que estén disponibles. 
 use("db_campus_alquiler");
+db.getCollection("automovil").aggregate([
+    {
+        $match: {
+            Capacidad: 5
+        }
+    },
+    {
+        $lookup: {
+            from: "alquiler",
+            localField: "_ID_Automovil",
+            foreignField: "ID_Automovil_ID_Automovil",
+            as: "fk_automovil_alquiler"
+        }
+    },
+    {
+        $unwind: "$fk_automovil_alquiler"
+    },
+    {
+        $match: {
+            "fk_automovil_alquiler.Estado": "Activo"
+        }
+    },
+    {
+        $project: {
+            _id: 0,
+            _ID_Automovil: 1,
+            Marca: 1,
+            Modelo: 1,
+            Anio: 1,
+            Tipo: 1,
+            Capacidad: 1,
+            Precio_Diario: 1,
+            "fk_automovil_alquiler": 1
+        }
+    },
+    {
+        $group: {
+            _id: "$_ID_Automovil",
+            _ID_Automovil: { $first: "$_ID_Automovil" },
+            Marca: { $first: "$Marca" },
+            Modelo: { $first: "$Modelo" },
+            Anio: { $first: "$Anio" },
+            Tipo: { $first: "$Tipo" },
+            Capacidad: { $first: "$Capacidad" },
+            Precio_Diario: { $first: "$Precio_Diario" },
+            "fk_automovil_alquiler": { $push: "$fk_automovil_alquiler" }
+        }
+    },
+    {
+        $project: {
+            _id: 0,
+            "fk_automovil_alquiler._id": 0,
+            "fk_automovil_alquiler.ID_Automovil_ID_Automovil": 0,
 
+        }
+    }
+])
+
+// 20. Obtener los datos del cliente que realizó la reserva con ID_Reserva específico
+use("db_campus_alquiler");
+db.getCollection("cliente").aggregate([
+    {
+        $lookup: {
+          from: "reserva",
+          localField: "_ID_Cliente",
+          foreignField: "ID_Cliente_ID_Cliente",
+          as: "fk_cliente_reserva"
+        }
+    },
+    {
+        $unwind: "$fk_cliente_reserva"
+    },
+    {
+        $match: {
+            "fk_cliente_reserva.ID_Reserva": 2
+        }
+    },
+    {
+        $project: {
+            _id: 0,
+            "fk_cliente_reserva._id": 0,
+            "fk_cliente_reserva.ID_Cliente_ID_Cliente": 0
+        }
+    }
+])
+
+// 21. Listar los alquileres con fecha de inicio entre '2023-07-05' y '2023-07-10'. 
+use("db_campus_alquiler");
+db.alquiler.find({ $and: [ { Fecha_Inicio: {$gte: "2023-08-01"}}, { Fecha_Inicio: {$lte: "2023-08-30"}} ]}, {_id: 0})
 // ----------------------------------------------------------------------------
