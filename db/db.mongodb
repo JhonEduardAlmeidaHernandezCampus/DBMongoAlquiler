@@ -9,17 +9,28 @@ db.createCollection("sucursal", {
             required: ["_ID_Sucursal", "Nombre", "Direccion", "Telefono"],
             properties: {
                 _ID_Sucursal: {
-                    bsonType: "int",
+                    bsonType: "string",
+                    maxLength: 30,
+                    pattern: "[a-z-A-Z0-9]$",
+                    description: "Error en la entrada del dato '_ID_Sucursal'"
                 },
                 Nombre: {
                     bsonType: "string",
+                    maxLength: 50,
+                    pattern: "[a-zA-Z\s]$",
+                    description: "Error en la entrada del dato 'Nombre'"
                 },
                 Direccion: {
                     bsonType: "string",
+                    maxLength: 50,
+                    description: "Error en la entrada del dato 'Direccion'"
                 },
                 Telefono: {
                     bsonType: "string",
-                    pattern: "^[0-9]{10}$"
+                    minLength: 6,
+                    maxLength: 15,
+                    pattern: "[0-9\s\+]$",
+                    description: "Error en la entrada del dato 'Telefono'"
                 }
             }
         }
@@ -37,29 +48,45 @@ db.createCollection("automovil", {
             required: ["_ID_Automovil", "Marca", "Modelo", "Anio", "Tipo", "Capacidad", "Precio_Diario"],
             properties: {
                 _ID_Automovil: {
-                    bsonType: "int",
+                    bsonType: "string",
+                    maxLength: 30,
+                    pattern: "[a-zA-Z0-9\-]$",
+                    description: "Error en la entrada del dato '_ID_Automovil'"
                 },
                 Marca: {
                     bsonType: "string",
+                    maxLength: 30,
+                    pattern: "[a-zA-Z]$",
+                    description: "Error en la entrada del dato 'Marca'"
                 },
                 Modelo: {
-                    bsonType: "int",
-                    minimum: 1900,
-                    maximum: 2060,
+                    bsonType: "string",
+                    maxLength: 30,
+                    pattern: "[a-zA-Z\s]$",
+                    description: "Error en la entrada del dato 'Modelo'"
                 },
                 Anio: {
                     bsonType: "int",
                     minimum: 2000,
                     maximum: 2027,
+                    description: "Error en la entrada del dato 'Año'"
                 },
                 Tipo: {
                     bsonType: "string",
+                    maxLength: 30,
+                    description: "Error en la entrada del dato 'Tipo'"
                 },
                 Capacidad: {
                     bsonType: "int",
+                    minimum: 1,
+                    maximum: 30,
+                    description: "Error en la entrada del dato 'Capacidad'"
                 },
                 Precio_Diario: {
                     bsonType: "int",
+                    minimum: 100,
+                    maximum: 10000000,
+                    description: "Error en la entrada del dato 'Precio_Diario'"
                 }
             }
         }
@@ -69,39 +96,70 @@ db.createCollection("automovil", {
 use("db_campus_alquiler");
 db.createCollection("cliente", {
     capped: true,
-    size: 650,
+    size: 850,
     max: 5,
     validator: {
         $jsonSchema: {
             bsonType: "object",
-            required: ["_ID_Cliente", "Nombre", "Apellido", "DNI", "Direccion", "Telefono", "Email"],
+            required: ["_ID_Cliente", "Nombre1", "Apellido1", "DNI1", "Direccion1", "Telefono1", "Email1"],
             properties: {
                 _ID_Cliente: {
                     bsonType: "int",
+                    description: "Error en la entrada del dato '_ID_Cliente'"
                 },
-                Nombre: {
+                Nombre1: {
                     bsonType: "string",
+                    maxLength: 25,
+                    pattern: "[a-zA-Z\s]",
+                    description: "Error en la entrada del dato 'Nombre'"
                 },
-                Apellido: {
+                Apellido1: {
                     bsonType: "string",
+                    maxLength: 25,
+                    pattern: "[a-zA-Z\s]",
+                    description: "Error en la entrada del dato 'Apellido'"
                 },
-                DNI: {
+                DNI1: {
                     bsonType: "int",
+                    minimum: 8,
+                    maximum: 12,
+                    description: "Error en la entrada del dato 'DNI'"
                 },
-                Direccion: {
+                Direccion1: {
                     bsonType: "string",
+                    maxLength: 50,
+                    pattern: "[a-zA-Z\s]",
+                    description: "Error en la entrada del dato 'Direccion'"
                 },
-                Telefono: {
+                Telefono1: {
                     bsonType: "string",
-                    pattern: "^[0-9]{10}$"
+                    minLength: 6,
+                    maxLength: 15,
+                    pattern: "[0-9\s\+]",  
+                    description: "Error en la entrada del dato 'Telefono'"
                 },
-                Email: {
+                Email1: {
                     bsonType: "string",
+                    pattern: "[a-zA-Z0-9+@]",
+                    description: "Error en la entrada del dato 'Email'"
                 }
             }
         }
     }
 });
+
+use("db_campus_alquiler");
+db.cliente.insertOne([
+    {
+        "_ID_Cliente": 1,
+        "Nombre1": "Jhon",
+        "Apellido1": "Hernandez",
+        "DNI1": 110235479,
+        "Direccion1": "Ciudadela",
+        "Telefono1": "3005559677",
+        "Email1": "jho1n"
+    }
+])
 
 use("db_campus_alquiler");
 db.createCollection("empleado", {
