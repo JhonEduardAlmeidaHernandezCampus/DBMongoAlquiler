@@ -16,6 +16,14 @@ storageSucursal.get("/", configGET(), async(req, res) => {
     }
 })
 
+/* 
+    {
+        "_ID_Sucursal": "1-5S45587545",
+        "Nombre": "San autos",
+        "Direccion": "Bucaramanga - Calle 18 # 12 - 45",
+        "Telefono": "+57 3002154875"
+    } 
+*/
 storageSucursal.post("/", async(req, res) => {
     try {
         let tabla = db.collection("sucursal")
@@ -24,8 +32,7 @@ storageSucursal.post("/", async(req, res) => {
         res.send("Sucursal creada con exito")
 
     } catch (error) {
-        console.log(error);
-        res.status(400).send("Error al crear el registro de la sucursal, datos incorrectos")
+        res.status(400).send(error.errInfo.details.schemaRulesNotSatisfied[0].propertiesNotSatisfied[0].description)
     }
 })
 
