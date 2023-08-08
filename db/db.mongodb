@@ -1,0 +1,306 @@
+use("db_campus_alquiler");
+db.createCollection("sucursal", {
+    capped: true,
+    size: 650,
+    max: 5,
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["_ID_Sucursal", "Nombre", "Direccion", "Telefono"],
+            properties: {
+                _ID_Sucursal: {
+                    bsonType: "int",
+                },
+                Nombre: {
+                    bsonType: "string",
+                },
+                Direccion: {
+                    bsonType: "string",
+                },
+                Telefono: {
+                    bsonType: "string",
+                    pattern: "^[0-9]{10}$"
+                }
+            }
+        }
+    }
+});
+
+use("db_campus_alquiler");
+db.createCollection("automovil", {
+    capped: true,
+    size: 650,
+    max: 5,
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["_ID_Automovil", "Marca", "Modelo", "Anio", "Tipo", "Capacidad", "Precio_Diario"],
+            properties: {
+                _ID_Automovil: {
+                    bsonType: "int",
+                },
+                Marca: {
+                    bsonType: "string",
+                },
+                Modelo: {
+                    bsonType: "int",
+                    minimum: 1900,
+                    maximum: 2060,
+                },
+                Anio: {
+                    bsonType: "int",
+                    minimum: 2000,
+                    maximum: 2027,
+                },
+                Tipo: {
+                    bsonType: "string",
+                },
+                Capacidad: {
+                    bsonType: "int",
+                },
+                Precio_Diario: {
+                    bsonType: "int",
+                }
+            }
+        }
+    }
+});
+
+use("db_campus_alquiler");
+db.createCollection("cliente", {
+    capped: true,
+    size: 650,
+    max: 5,
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["_ID_Cliente", "Nombre", "Apellido", "DNI", "Direccion", "Telefono", "Email"],
+            properties: {
+                _ID_Cliente: {
+                    bsonType: "int",
+                },
+                Nombre: {
+                    bsonType: "string",
+                },
+                Apellido: {
+                    bsonType: "string",
+                },
+                DNI: {
+                    bsonType: "int",
+                },
+                Direccion: {
+                    bsonType: "string",
+                },
+                Telefono: {
+                    bsonType: "string",
+                    pattern: "^[0-9]{10}$"
+                },
+                Email: {
+                    bsonType: "string",
+                }
+            }
+        }
+    }
+});
+
+use("db_campus_alquiler");
+db.createCollection("empleado", {
+    capped: true,
+    size: 650,
+    max: 5,
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["_ID_Empleado", "Nombre", "Apellido", "DNI", "Direccion", "Telefono", "Cargo"],
+            properties: {
+                _ID_Empleado: {
+                    bsonType: "int",
+                },
+                Nombre: {
+                    bsonType: "string",
+                },
+                Apellido: {
+                    bsonType: "string",
+                },
+                DNI: {
+                    bsonType: "int",
+                },
+                Direccion: {
+                    bsonType: "string",
+                },
+                Telefono: {
+                    bsonType: "string",
+                    pattern: "^[0-9]{10}$"
+                },
+                Cargo: {
+                    bsonType: "string",
+                }
+            }
+        }
+    }
+});
+
+use("db_campus_alquiler");
+db.createCollection("alquiler", {
+    capped: true,
+    size: 650,
+    max: 5,
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["_ID_Alquiler", "ID_Cliente_ID_Cliente", "ID_Automovil_ID_Automovil", "Fecha_Inicio", "Fecha_Fin", "Costo_Total", "Estado"],
+            properties: {
+                _ID_Alquiler: {
+                    bsonType: "int",
+                },
+                ID_Cliente_ID_Cliente: {
+                    bsonType: "int",
+                },
+                ID_Automovil_ID_Automovil: {
+                    bsonType: "int",
+                },
+                Fecha_Inicio: {
+                    bsonType: "date",
+                },
+                Fecha_Fin: {
+                    bsonType: "date",
+                },
+                Costo_Total: {
+                    bsonType: "int",
+                },
+                Estado: {
+                    bsonType: "string",
+                }
+            }
+        }
+    }
+});
+
+use("db_campus_alquiler");
+db.createCollection("sucursal_automovil", {
+    capped: true,
+    size: 650,
+    max: 5,
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["ID_Sucursal_ID_Sucursal", "ID_Automovil_ID_Automovil", "Cantidad_Disponible"],
+            properties: {
+                ID_Sucursal_ID_Sucursal: {
+                    bsonType: "int",
+                },
+                ID_Automovil_ID_Automovil: {
+                    bsonType: "int",
+                },
+                Cantidad_Disponible: {
+                    bsonType: "int",
+                }
+            }
+        }
+    }
+});
+
+use("db_campus_alquiler");
+db.createCollection("reserva", {
+    capped: true,
+    size: 650,
+    max: 5,
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["ID_Reserva", "ID_Cliente_ID_Cliente", "ID_Automovil_ID_Automovil", "Fecha_Reserva", "Fecha_Inicio", "Fecha_Fin", "Estado"],
+            properties: {
+                ID_Reserva: {
+                    bsonType: "int",
+                },
+                ID_Cliente_ID_Cliente: {
+                    bsonType: "int",
+                },
+                ID_Automovil_ID_Automovil: {
+                    bsonType: "int",
+                },
+                Fecha_Reserva: {
+                    bsonType: "date",
+                },
+                Fecha_Inicio: {
+                    bsonType: "date",
+                },
+                Fecha_Fin: {
+                    bsonType: "date",
+                },
+                Estado: {
+                    bsonType: "string",
+                }
+            }
+        }
+    }
+});
+
+use("db_campus_alquiler");
+db.createCollection("registro_devolucion", {
+    capped: true,
+    size: 650,
+    max: 5,
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["ID_Registro", "ID_Alquiler_ID_Alquiler", "ID_Empleado_ID_Empleado", "Fecha_Devolucion", "Combustible_Devuelto", "Kilometraje_Devuelto", "Monto_Adicional"],
+            properties: {
+                ID_Registro: {
+                    bsonType: "int",
+                },
+                ID_Alquiler_ID_Alquiler: {
+                    bsonType: "int",
+                },
+                ID_Empleado_ID_Empleado: {
+                    bsonType: "int",
+                },
+                Fecha_Devolucion: {
+                    bsonType: "date",
+                },
+                Combustible_Devuelto: {
+                    bsonType: "string",
+                },
+                Kilometraje_Devuelto: {
+                    bsonType: "int",
+                },
+                Monto_Adicional: {
+                    bsonType: "int",
+                }
+            }
+        }
+    }
+});
+
+use("db_campus_alquiler");
+db.createCollection("registro_entrega", {
+    capped: true,
+    size: 650,
+    max: 5,
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["ID_Registro", "ID_Alquiler_ID_Alquiler", "ID_Empleado_ID_Empleado", "Fecha_Entrega", "Combustible_Entregado", "Kilometraje_Entregado"],
+            properties: {
+                ID_Registro: {
+                    bsonType: "int",
+                },
+                ID_Alquiler_ID_Alquiler: {
+                    bsonType: "int",
+                },
+                ID_Empleado_ID_Empleado: {
+                    bsonType: "int",
+                },
+                Fecha_Entrega: {
+                    bsonType: "date",
+                },
+                Combustible_Entregado: {
+                    bsonType: "string",
+                },
+                Kilometraje_Entregado: {
+                    bsonType: "int",
+                }
+            }
+        }
+    }
+});
