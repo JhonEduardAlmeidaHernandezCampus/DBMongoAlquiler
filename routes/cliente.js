@@ -16,16 +16,15 @@ storageCliente.get("/", configGET(), async(req, res) => {
     }
 })
 
-storageCliente.post("/", async(req, res) => {
+storageCliente.post("/", configGET(), async(req, res) => {
     try {
         let tabla = db.collection("cliente")
         await tabla.insertOne(req.body);
         console.log(req.rateLimit);
-        res.send("Cliente creado con exito")
+        res.send("Registro creado con exito")
 
     } catch (error) {
-        console.log(error);
-        res.status(400).send("Error al crear el registro del cliente, datos incorrectos")
+        res.status(400).send("Error al crear el registro del cliente")
     }
 })
 

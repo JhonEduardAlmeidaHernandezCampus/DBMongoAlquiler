@@ -101,65 +101,50 @@ db.createCollection("cliente", {
     validator: {
         $jsonSchema: {
             bsonType: "object",
-            required: ["_ID_Cliente", "Nombre1", "Apellido1", "DNI1", "Direccion1", "Telefono1", "Email1"],
+            required: ["_ID_Cliente", "Nombre", "Apellido", "DNI", "Direccion", "Telefono", "Email"],
             properties: {
                 _ID_Cliente: {
                     bsonType: "int",
                     description: "Error en la entrada del dato '_ID_Cliente'"
                 },
-                Nombre1: {
+                Nombre: {
                     bsonType: "string",
                     maxLength: 25,
-                    pattern: "[a-zA-Z\s]",
+                    pattern: "[a-zA-Z\s]+$",
                     description: "Error en la entrada del dato 'Nombre'"
                 },
-                Apellido1: {
+                Apellido: {
                     bsonType: "string",
                     maxLength: 25,
-                    pattern: "[a-zA-Z\s]",
+                    pattern: "[a-zA-Z\s]+$",
                     description: "Error en la entrada del dato 'Apellido'"
                 },
-                DNI1: {
+                DNI: {
                     bsonType: "int",
-                    minimum: 8,
-                    maximum: 12,
                     description: "Error en la entrada del dato 'DNI'"
                 },
-                Direccion1: {
+                Direccion: {
                     bsonType: "string",
                     maxLength: 50,
-                    pattern: "[a-zA-Z\s]",
+                    pattern: "[a-zA-Z0-9\w\s]+$",
                     description: "Error en la entrada del dato 'Direccion'"
                 },
-                Telefono1: {
+                Telefono: {
                     bsonType: "string",
                     minLength: 6,
                     maxLength: 15,
-                    pattern: "[0-9\s\+]",  
+                    pattern: "[0-9]+$",  
                     description: "Error en la entrada del dato 'Telefono'"
                 },
-                Email1: {
+                Email: {
                     bsonType: "string",
-                    pattern: "[a-zA-Z0-9+@]",
+                    pattern: "[a-zA-Z0-9+@\.]+$",
                     description: "Error en la entrada del dato 'Email'"
                 }
             }
         }
     }
 });
-
-use("db_campus_alquiler");
-db.cliente.insertOne([
-    {
-        "_ID_Cliente": 1,
-        "Nombre1": "Jhon",
-        "Apellido1": "Hernandez",
-        "DNI1": 110235479,
-        "Direccion1": "Ciudadela",
-        "Telefono1": "3005559677",
-        "Email1": "jho1n"
-    }
-])
 
 use("db_campus_alquiler");
 db.createCollection("empleado", {

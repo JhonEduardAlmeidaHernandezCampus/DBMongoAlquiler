@@ -2,7 +2,7 @@ import dotenv from 'dotenv'
 import express from 'express'
 import storageSucursal from './routes/sucursal.js';
 import storageAutomovil from './routes/automovil.js';
-import storageCliente from './routes/cliente.js'; 
+import storageCliente from './routes/cliente.js';
 
 import storageSucursalAutomovil from './routes/sucursal_automovil.js';
 import storageReserva from './routes/reserva.js';

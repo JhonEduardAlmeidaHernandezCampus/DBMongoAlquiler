@@ -5,7 +5,7 @@ dotenv.config("../");
 
 export async function con(){
     try {
-        const uri = `mongodb+srv://${process.env.User}:${process.env.Password}@examplecluster.y74xdrq.mongodb.net/${process.env.Database}`
+        const uri = `mongodb+srv://${process.env.User}:${process.env.Password}@cluster0.swlbwvz.mongodb.net/${process.env.Database}`
         const option = {
             useNewUrlParser: true,
             useUnifiedTopology: true
