@@ -528,19 +528,19 @@ db.getCollection("cliente").aggregate([
         $unwind: "$fk_cliente_alquiler"
     },
     {
+        $match: {
+            "fk_cliente_alquiler.Estado": "Activo"
+        }
+    },
+    {
         $project: {
             _id: 0,
             _ID_Cliente: 1, 
             Nombre: 1,
             Apellido : 1,
-            // Nombre: { $concat: ['$Nombre', ' ', '$Apellido'] },
             DNI: 1,
             Telefono: 1,
-            "fk_cliente_alquiler.ID_Automovil_ID_Automovil": 1,
-            "fk_cliente_alquiler.Fecha_Inicio": 1,
-            "fk_cliente_alquiler.Fecha_Fin": 1,
-            "fk_cliente_alquiler.Costo_Total": 1,
-            "fk_cliente_alquiler.Estado": 1,
+            "fk_cliente_alquiler": 1
         }
     },
     {
@@ -885,5 +885,5 @@ db.getCollection("cliente").aggregate([
 
 // 21. Listar los alquileres con fecha de inicio entre '2023-07-05' y '2023-07-10'. 
 use("db_campus_alquiler");
-db.alquiler.find({ $and: [ { Fecha_Inicio: {$gte: "2023-08-01"}}, { Fecha_Inicio: {$lte: "2023-08-30"}} ]}, {_id: 0})
+db.alquiler.find({ Fecha_Inicio: {$gte: "2023-08-01", $lte: "2023-08-02"}}, {_id: 0})
 // ----------------------------------------------------------------------------
