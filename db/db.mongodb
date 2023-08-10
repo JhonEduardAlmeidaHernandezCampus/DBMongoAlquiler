@@ -158,25 +158,41 @@ db.createCollection("empleado", {
             properties: {
                 _ID_Empleado: {
                     bsonType: "int",
+                    description: "Error en la entrada del dato '_ID_Empleado'"
                 },
                 Nombre: {
                     bsonType: "string",
+                    maxLength: 25,
+                    pattern: "[a-zA-Z\s]+$",
+                    description: "Error en la entrada del dato 'Nombre'"
                 },
                 Apellido: {
                     bsonType: "string",
+                    maxLength: 25,
+                    pattern: "[a-zA-Z\s]+$",
+                    description: "Error en la entrada del dato 'Nombre'"
                 },
                 DNI: {
                     bsonType: "int",
+                    description: "Error en la entrada del dato 'DNI'"
                 },
                 Direccion: {
                     bsonType: "string",
+                    maxLength: 50,
+                    pattern: "[a-zA-Z0-9\w\s]+$",
+                    description: "Error en la entrada del dato 'Direccion'"
                 },
                 Telefono: {
                     bsonType: "string",
-                    pattern: "^[0-9]{10}$"
+                    minLength: 6,
+                    maxLength: 15,
+                    pattern: "[0-9]+$",  
+                    description: "Error en la entrada del dato 'Telefono'"
                 },
                 Cargo: {
                     bsonType: "string",
+                    pattern: "[a-zA-Z\s]+$",
+                    description: "Error en la entrada del dato 'Cargo'"
                 }
             }
         }
@@ -195,24 +211,34 @@ db.createCollection("alquiler", {
             properties: {
                 _ID_Alquiler: {
                     bsonType: "int",
+                    description: "Error en la entrada del dato '_ID_Alquiler'"
                 },
                 ID_Cliente_ID_Cliente: {
                     bsonType: "int",
+                    description: "Error en la entrada del dato 'ID_Cliente_ID_Cliente'"
                 },
                 ID_Automovil_ID_Automovil: {
                     bsonType: "int",
+                    description: "Error en la entrada del dato 'ID_Automovil_ID_Automovil'"
                 },
                 Fecha_Inicio: {
                     bsonType: "date",
+                    description: "Error en la entrada del dato 'Fecha_Inicio'"
                 },
                 Fecha_Fin: {
                     bsonType: "date",
+                    description: "Error en la entrada del dato 'Fecha_Fin'"
                 },
                 Costo_Total: {
                     bsonType: "int",
+                    minimum: 1000,
+                    maximum: 10000000,
+                    description: "Error en la entrada del dato 'Costo_Total'"
                 },
                 Estado: {
                     bsonType: "string",
+                    pattern: "[a-zA-Z\s]+$",
+                    description: "Error en la entrada del dato 'Estado'"
                 }
             }
         }
@@ -231,12 +257,17 @@ db.createCollection("sucursal_automovil", {
             properties: {
                 ID_Sucursal_ID_Sucursal: {
                     bsonType: "int",
+                    description: "Error en la entrada del dato 'ID_Sucursal_ID_Sucursal'"
                 },
                 ID_Automovil_ID_Automovil: {
                     bsonType: "int",
+                    description: "Error en la entrada del dato 'ID_Automovil_ID_Automovil'"
                 },
                 Cantidad_Disponible: {
                     bsonType: "int",
+                    minimum: 1,
+                    maximum: 1000,
+                    description: "Error en la entrada del dato 'Cantidad_Disponible'"
                 }
             }
         }
@@ -255,24 +286,32 @@ db.createCollection("reserva", {
             properties: {
                 ID_Reserva: {
                     bsonType: "int",
+                    description: "Error en la entrada del dato 'ID_Reserva'"
                 },
                 ID_Cliente_ID_Cliente: {
                     bsonType: "int",
+                    description: "Error en la entrada del dato 'ID_Cliente_ID_Cliente'"
                 },
                 ID_Automovil_ID_Automovil: {
                     bsonType: "int",
+                    description: "Error en la entrada del dato 'ID_Automovil_ID_Automovil'"
                 },
                 Fecha_Reserva: {
                     bsonType: "date",
+                    description: "Error en la entrada del dato 'Fecha_Reserva'"
                 },
                 Fecha_Inicio: {
                     bsonType: "date",
+                    description: "Error en la entrada del dato 'Fecha_Inicio'"
                 },
                 Fecha_Fin: {
                     bsonType: "date",
+                    description: "Error en la entrada del dato 'Fecha_Fin'"
                 },
                 Estado: {
                     bsonType: "string",
+                    pattern: "[a-zA-Z\s]+$",
+                    description: "Error en la entrada del dato 'Estado'"
                 }
             }
         }
@@ -291,24 +330,36 @@ db.createCollection("registro_devolucion", {
             properties: {
                 ID_Registro: {
                     bsonType: "int",
+                    description: "Error en la entrada del dato 'ID_Registro'"
                 },
                 ID_Alquiler_ID_Alquiler: {
                     bsonType: "int",
+                    description: "Error en la entrada del dato 'ID_Alquiler_ID_Alquiler'"
                 },
                 ID_Empleado_ID_Empleado: {
                     bsonType: "int",
+                    description: "Error en la entrada del dato 'ID_Empleado_ID_Empleado'"
                 },
                 Fecha_Devolucion: {
                     bsonType: "date",
+                    description: "Error en la entrada del dato 'Fecha_Devolucion'"
                 },
                 Combustible_Devuelto: {
                     bsonType: "string",
+                    pattern: "[a-zA-Z\s]$",
+                    description: "Error en la entrada del dato 'Combustible_Devuelto'"
                 },
                 Kilometraje_Devuelto: {
                     bsonType: "int",
+                    minimum: 1,
+                    maximum: 100000,
+                    description: "Error en la entrada del dato 'Kilometraje_Devuelto'"
                 },
                 Monto_Adicional: {
                     bsonType: "int",
+                    minimum: 1000,
+                    maximum: 10000000,
+                    description: "Error en la entrada del dato 'Monto_Adicional'"
                 }
             }
         }
@@ -327,21 +378,30 @@ db.createCollection("registro_entrega", {
             properties: {
                 ID_Registro: {
                     bsonType: "int",
+                    description: "Error en la entrada del dato 'ID_Registro'"
                 },
                 ID_Alquiler_ID_Alquiler: {
                     bsonType: "int",
+                    description: "Error en la entrada del dato 'ID_Alquiler_ID_Alquiler'"
                 },
                 ID_Empleado_ID_Empleado: {
                     bsonType: "int",
+                    description: "Error en la entrada del dato 'ID_Empleado_ID_Empleado'"
                 },
                 Fecha_Entrega: {
                     bsonType: "date",
+                    description: "Error en la entrada del dato 'Fecha_Entrega'"
                 },
                 Combustible_Entregado: {
                     bsonType: "string",
+                    pattern: "[a-zA-Z\s]$",
+                    description: "Error en la entrada del dato 'Combustible_Entregado'"
                 },
                 Kilometraje_Entregado: {
                     bsonType: "int",
+                    minimum: 1,
+                    maximum: 100000,
+                    description: "Error en la entrada del dato 'Kilometraje_Entregado'"
                 }
             }
         }
