@@ -16,6 +16,17 @@ storageReserva.get("/", configGET(), async(req, res) => {
     }
 })
 
+/*
+    {
+        ID_Reserva: 1,
+        ID_Cliente_ID_Cliente: 1,
+        ID_Automovil_ID_Automovil: 1,
+        Fecha_Reserva: new Date("2023-08-12"),
+        Fecha_Inicio: new Date("2023-08-12"),
+        Fecha_Fin: new Date("2023-08-12"),
+        Estado: "Activo"
+    }
+*/
 storageReserva.post("/", configGET(), async(req, res) => {
     try {
         let tabla = db.collection("reserva")
@@ -24,7 +35,7 @@ storageReserva.post("/", configGET(), async(req, res) => {
         res.send("Reserva creada con exito")
 
     } catch (error) {
-        res.status(400).send("Error al crear el registro de la reserva, datos incorrectos")
+        res.status(400).send(error.errInfo.details.schemaRulesNotSatisfied[0].propertiesNotSatisfied[0].description)
     }
 })
 
