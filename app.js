@@ -4,6 +4,7 @@ import storageSucursal from './routes/sucursal.js';
 import storageAutomovil from './routes/automovil.js';
 import storageCliente from './routes/cliente.js';
 import storageEmpleado from './routes/empleado.js';
+import storageAlquiler from './routes/alquiler.js';
 
 dotenv.config()
 let app = express();
@@ -13,6 +14,7 @@ app.use("/sucursal", storageSucursal);
 app.use("/automovil", storageAutomovil);
 app.use("/cliente", storageCliente);
 app.use("/empleado", storageEmpleado);
+app.use("/alquiler", storageAlquiler);
 
 let config = JSON.parse(process.env.Server)
 app.listen(config, () => console.log(`http://${config.hostname}:${config.port}`))
