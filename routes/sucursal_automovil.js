@@ -16,6 +16,13 @@ storageSucursalAutomovil.get("/", configGET(), async(req, res) => {
     }
 })
 
+/*
+    {
+        "ID_Sucursal_ID_Sucursal": 1,
+        "ID_Automovil_ID_Automovil": 1,
+        "Cantidad_Disponible": 10
+    }
+*/
 storageSucursalAutomovil.post("/", configGET(), async(req, res) => {
     try {
         let tabla = db.collection("sucursal_automovil")
@@ -24,7 +31,7 @@ storageSucursalAutomovil.post("/", configGET(), async(req, res) => {
         res.send("Sucursal de automovil creada con exito")
 
     } catch (error) {
-        res.status(400).send("Error al crear el registro de la sucursal del automovil, datos incorrectos")
+        res.status(400).send(error.errInfo.details.schemaRulesNotSatisfied[0].propertiesNotSatisfied[0].description)
     }
 })
 
