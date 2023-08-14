@@ -1,17 +1,15 @@
 use("db_campus_alquiler");
 db.createCollection("sucursal", {
     capped: true,
-    size: 650,
-    max: 5,
+    size: 1980,
+    max: 10,
     validator: {
         $jsonSchema: {
             bsonType: "object",
             required: ["_ID_Sucursal", "Nombre", "Direccion", "Telefono"],
             properties: {
                 _ID_Sucursal: {
-                    bsonType: "string",
-                    maxLength: 30,
-                    pattern: "[a-z-A-Z0-9]$",
+                    bsonType: "int",
                     description: "Error en la entrada del dato '_ID_Sucursal'"
                 },
                 Nombre: {
@@ -40,17 +38,15 @@ db.createCollection("sucursal", {
 use("db_campus_alquiler");
 db.createCollection("automovil", {
     capped: true,
-    size: 650,
-    max: 5,
+    size: 1980,
+    max: 10,
     validator: {
         $jsonSchema: {
             bsonType: "object",
             required: ["_ID_Automovil", "Marca", "Modelo", "Anio", "Tipo", "Capacidad", "Precio_Diario"],
             properties: {
                 _ID_Automovil: {
-                    bsonType: "string",
-                    maxLength: 30,
-                    pattern: "[a-zA-Z0-9\-]$",
+                    bsonType: "int",
                     description: "Error en la entrada del dato '_ID_Automovil'"
                 },
                 Marca: {
@@ -62,7 +58,7 @@ db.createCollection("automovil", {
                 Modelo: {
                     bsonType: "string",
                     maxLength: 30,
-                    pattern: "[a-zA-Z\s]$",
+                    pattern: "[a-zA-Z0-9\s]+$",
                     description: "Error en la entrada del dato 'Modelo'"
                 },
                 Anio: {
@@ -96,8 +92,8 @@ db.createCollection("automovil", {
 use("db_campus_alquiler");
 db.createCollection("cliente", {
     capped: true,
-    size: 850,
-    max: 5,
+    size: 1980,
+    max: 10,
     validator: {
         $jsonSchema: {
             bsonType: "object",
@@ -120,7 +116,8 @@ db.createCollection("cliente", {
                     description: "Error en la entrada del dato 'Apellido'"
                 },
                 DNI: {
-                    bsonType: "int",
+                    bsonType: "string",
+                    pattern: "[0-9]+$",
                     description: "Error en la entrada del dato 'DNI'"
                 },
                 Direccion: {
@@ -149,8 +146,8 @@ db.createCollection("cliente", {
 use("db_campus_alquiler");
 db.createCollection("empleado", {
     capped: true,
-    size: 650,
-    max: 5,
+    size: 1980,
+    max: 10,
     validator: {
         $jsonSchema: {
             bsonType: "object",
@@ -173,7 +170,8 @@ db.createCollection("empleado", {
                     description: "Error en la entrada del dato 'Nombre'"
                 },
                 DNI: {
-                    bsonType: "int",
+                    bsonType: "string",
+                    pattern: "[0-9]+$",
                     description: "Error en la entrada del dato 'DNI'"
                 },
                 Direccion: {
@@ -202,8 +200,8 @@ db.createCollection("empleado", {
 use("db_campus_alquiler");
 db.createCollection("alquiler", {
     capped: true,
-    size: 650,
-    max: 5,
+    size: 1980,
+    max: 10,
     validator: {
         $jsonSchema: {
             bsonType: "object",
@@ -222,11 +220,11 @@ db.createCollection("alquiler", {
                     description: "Error en la entrada del dato 'ID_Automovil_ID_Automovil'"
                 },
                 Fecha_Inicio: {
-                    bsonType: "date",
+                    bsonType: "string",
                     description: "Error en la entrada del dato 'Fecha_Inicio'"
                 },
                 Fecha_Fin: {
-                    bsonType: "date",
+                    bsonType: "string",
                     description: "Error en la entrada del dato 'Fecha_Fin'"
                 },
                 Costo_Total: {
@@ -248,8 +246,8 @@ db.createCollection("alquiler", {
 use("db_campus_alquiler");
 db.createCollection("sucursal_automovil", {
     capped: true,
-    size: 650,
-    max: 5,
+    size: 1980,
+    max: 10,
     validator: {
         $jsonSchema: {
             bsonType: "object",
@@ -277,8 +275,8 @@ db.createCollection("sucursal_automovil", {
 use("db_campus_alquiler");
 db.createCollection("reserva", {
     capped: true,
-    size: 650,
-    max: 5,
+    size: 1980,
+    max: 10,
     validator: {
         $jsonSchema: {
             bsonType: "object",
@@ -297,15 +295,15 @@ db.createCollection("reserva", {
                     description: "Error en la entrada del dato 'ID_Automovil_ID_Automovil'"
                 },
                 Fecha_Reserva: {
-                    bsonType: "date",
+                    bsonType: "string",
                     description: "Error en la entrada del dato 'Fecha_Reserva'"
                 },
                 Fecha_Inicio: {
-                    bsonType: "date",
+                    bsonType: "string",
                     description: "Error en la entrada del dato 'Fecha_Inicio'"
                 },
                 Fecha_Fin: {
-                    bsonType: "date",
+                    bsonType: "string",
                     description: "Error en la entrada del dato 'Fecha_Fin'"
                 },
                 Estado: {
@@ -321,8 +319,8 @@ db.createCollection("reserva", {
 use("db_campus_alquiler");
 db.createCollection("registro_devolucion", {
     capped: true,
-    size: 650,
-    max: 5,
+    size: 1980,
+    max: 10,
     validator: {
         $jsonSchema: {
             bsonType: "object",
@@ -341,7 +339,7 @@ db.createCollection("registro_devolucion", {
                     description: "Error en la entrada del dato 'ID_Empleado_ID_Empleado'"
                 },
                 Fecha_Devolucion: {
-                    bsonType: "date",
+                    bsonType: "string",
                     description: "Error en la entrada del dato 'Fecha_Devolucion'"
                 },
                 Combustible_Devuelto: {
@@ -369,8 +367,8 @@ db.createCollection("registro_devolucion", {
 use("db_campus_alquiler");
 db.createCollection("registro_entrega", {
     capped: true,
-    size: 650,
-    max: 5,
+    size: 1980,
+    max: 10,
     validator: {
         $jsonSchema: {
             bsonType: "object",
@@ -389,17 +387,17 @@ db.createCollection("registro_entrega", {
                     description: "Error en la entrada del dato 'ID_Empleado_ID_Empleado'"
                 },
                 Fecha_Entrega: {
-                    bsonType: "date",
+                    bsonType: "string",
                     description: "Error en la entrada del dato 'Fecha_Entrega'"
                 },
                 Combustible_Entregado: {
                     bsonType: "string",
-                    pattern: "[a-zA-Z\s]$",
+                    pattern: "[a-zA-Z0-9\s]$",
                     description: "Error en la entrada del dato 'Combustible_Entregado'"
                 },
                 Kilometraje_Entregado: {
                     bsonType: "int",
-                    minimum: 1,
+                    minimum: 0,
                     maximum: 100000,
                     description: "Error en la entrada del dato 'Kilometraje_Entregado'"
                 }
