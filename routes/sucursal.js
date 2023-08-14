@@ -1,11 +1,13 @@
-import { Router } from 'express'
-import { con } from '../db/connect.js'
-import { configGET } from '../middleware/limit.js'
+import { Router } from 'express';
+import { con } from '../db/connect.js';
+import { configGET } from '../middleware/limit.js';
+import { validarEstructura, validarData } from '../middleware/middlewareSucursal.js';
+import { validarParams } from '../middleware/validarID.js';
 
 let storageSucursal = Router()
 let db = await con()
 
-storageSucursal.get("/", configGET(), async(req, res) => {
+storageSucursal.get("/", configGET(), validarEstructura, async(req, res) => {
     try {
         let tabla = db.collection("sucursal");
         let data = await tabla.find().toArray();
@@ -18,53 +20,58 @@ storageSucursal.get("/", configGET(), async(req, res) => {
 
 /* 
     {
-        "_ID_Sucursal": "1-5S45587545",
-        "Nombre": "San autos",
-        "Direccion": "Bucaramanga - Calle 18 # 12 - 45",
-        "Telefono": "+57 3002154875"
-    } 
+        "ID": 1,
+        "Name": "San autos",
+        "Address": "Bucaramanga - Calle 18 # 12 - 45",
+        "Phone": "+57 3002154875"
+    }
 */
-storageSucursal.post("/", async(req, res) => {
+storageSucursal.post("/", configGET(), validarEstructura, validarData, async(req, res) => {
     try {
         let tabla = db.collection("sucursal")
         await tabla.insertOne(req.body);
         console.log(req.rateLimit);
-        res.send("Sucursal creada con exito")
+
+        res.send({status: 200, message: "Registro creado con exito"})
 
     } catch (error) {
-        res.status(400).send(error.errInfo.details.schemaRulesNotSatisfied[0].propertiesNotSatisfied[0].description)
+        res.send({status: 400, message: "" + error.errInfo.details.schemaRulesNotSatisfied[0].propertiesNotSatisfied[0].description})
     }
 })
 
-// storageSucursal.put("/:id", async(req, res) => {
-//     try {
-//         let { id } = req.params;
-//         let collection = db.collection("sucursal")
-//         let res = await collection.bulkWrite([
-//             {
-//                 updateOne: {
-//                     filter: { _ID_Sucursal: Object.values(id) },
-//                     update: { $set: req.body }
-//                 }
-//             }
-//         ])
-//         res.send("Registro actualizado con exito")
+storageSucursal.put("/:ID", configGET(), validarEstructura, validarParams, validarData, async(req, res) => {
+    try {
+        
+        let id = req.params
+        id = parseInt(id)
 
-//     } catch (error) {
-//         res.status(400).send("Error al actualizar el registro")
-//     }
-// })
+        let collection = db.collection("sucursal")
+        let respuesta = await collection.updateOne(
+            { _ID_Sucursal: id },
+            { $set: req.body }
+        )
 
-// storageSucursal.delete("/:id", async(req, res) => {
-//     try {
-//         let { id } = req.params;
-//         let collection = db.collection("sucursal")
-//         let res = await collection.deleteOne({_ID_Sucursal: id})
-//         res.send("Registro eliminado con exito")
+        res.send({status: 200, message: "Registro actualizado con exito"})
 
-//     } catch (error) {
-//         res.status(400).send("Error al eliminar el registro")
-//     }
-// })
+    } catch (error) {
+        res.send({status: 400, message: "" + error.errInfo.details.schemaRulesNotSatisfied[0].propertiesNotSatisfied[0].description})
+    }
+})
+
+storageSucursal.delete("/:ID", configGET(), validarEstructura, validarParams, async(req, res) => {
+    try {
+
+        let id = req.params
+        id = parseInt(id)
+
+        let collection = db.collection("sucursal")
+        let respuesta = await collection.deleteOne({_ID_Sucursal: id})
+
+        res.send({status: 200, message: "Registro eliminado exitosamente"})
+
+    } catch (error) {
+        res.send({status: 400, message: "Error al eliminar el registro"})
+    }
+})
 
 export default storageSucursal;

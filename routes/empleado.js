@@ -1,11 +1,13 @@
-import { Router } from 'express'
-import { con } from '../db/connect.js'
-import { configGET } from '../middleware/limit.js'
+import { Router } from 'express';
+import { con } from '../db/connect.js';
+import { configGET } from '../middleware/limit.js';
+import { validarEstructura, validarData } from '../middleware/middlewareEmpleado.js';
+import { validarParams, validarParamsDate } from '../middleware/validarID.js';
 
 let storageEmpleado = Router()
 let db = await con()
 
-storageEmpleado.get("/", configGET(), async(req, res) => {
+storageEmpleado.get("/", configGET(), validarEstructura, async(req, res) => {
     try {
         let tabla = db.collection("empleado");
         let data = await tabla.find().toArray();
@@ -18,56 +20,115 @@ storageEmpleado.get("/", configGET(), async(req, res) => {
 
 /*
     {
-        "_ID_Empleado": 1,
-        "Nombre": "Jhon Eduard",
-        "Apellido": "Almeida Hernandez",
-        "DNI": 1102391231,
-        "Direccion": "Calle 11B # 1A - 20",
-        "Telefono": "3005559677",
-        "Cargo": "Gerente regional"
+        "ID": 1,
+        "Name": "Camilo Andres",
+        "Surname": "Quintero Sanchez",
+        "Identification": "336524621",
+        "Address": "Lebrija - Santander",
+        "Phone": "+57 3225489677",
+        "Position": "Gerente"
     }
 */
-storageEmpleado.post("/", configGET(), async(req, res) => {
+storageEmpleado.post("/", configGET(), validarEstructura, validarData, async(req, res) => {
     try {
         let tabla = db.collection("empleado")
         await tabla.insertOne(req.body);
         console.log(req.rateLimit);
-        res.send("Registro creado con exito")
+        
+        res.send({status: 200, message: "Registro creado con exito"})
 
     } catch (error) {
-        res.status(400).send(error.errInfo.details.schemaRulesNotSatisfied[0].propertiesNotSatisfied[0].description)
+        res.send({status: 400, message: "" + error.errInfo.details.schemaRulesNotSatisfied[0].propertiesNotSatisfied[0].description})
     }
 })
 
-// storageEmpleado.put("/:id", async(req, res) => {
-//     try {
-//         let { id } = req.params;
-//         let collection = db.collection("empleado")
-//         let res = await collection.bulkWrite([
-//             {
-//                 updateOne: {
-//                     filter: { _ID_Sucursal: Object.values(id) },
-//                     update: { $set: req.body }
-//                 }
-//             }
-//         ])
-//         res.send("Registro actualizado con exito")
+storageEmpleado.put("/:ID", configGET(), validarEstructura, validarParams, validarData, async(req, res) => {
+    try {
 
-//     } catch (error) {
-//         res.status(400).send("Error al actualizar el registro")
-//     }
-// })
+        let id = req.params
+        id = parseInt(id)
 
-// storageEmpleado.delete("/:id", async(req, res) => {
-//     try {
-//         let { id } = req.params;
-//         let collection = db.collection("empleado")
-//         let res = await collection.deleteOne({_ID_Sucursal: id})
-//         res.send("Registro eliminado con exito")
+        let collection = db.collection("empleado")
+        let respuesta = await collection.updateOne(
+            { _ID_Empleado: id },
+            { $set: req.body }
+        )
 
-//     } catch (error) {
-//         res.status(400).send("Error al eliminar el registro")
-//     }
-// })
+        res.send({status: 200, message: "Registro actualizado con exito"})
 
+    } catch (error) {
+        res.send({status: 400, message: "" + error.errInfo.details.schemaRulesNotSatisfied[0].propertiesNotSatisfied[0].description})
+    }
+})
+
+storageEmpleado.delete("/:ID", configGET(), validarEstructura, validarParams, async(req, res) => {
+    try {
+
+        let id = req.params
+        id = parseInt(id)
+
+        let collection = db.collection("empleado")
+        let respuesta = await collection.deleteOne({_ID_Empleado: id})
+        
+        res.send({status: 200, message: "Registro eliminado exitosamente"})
+
+    } catch (error) {
+        res.send({status: 400, message: "Error al eliminar el registro"})
+    }
+})
+
+// Consultas -----------------------------------------------------------------------------------------------------
+
+// 7. Listar los empleados con el cargo de "Vendedor". 
+// http://127.10.10.10:5500/empleado/cargo/Vendedor
+storageEmpleado.get("/cargo/:ID", configGET(), validarEstructura, validarParamsDate, async(req, res) => {
+    try {
+        let id = req.params
+
+        let tabla = db.collection("empleado");
+        let data = await tabla.aggregate([
+            {
+                $match: {
+                    Cargo: id
+                }
+            },
+            {
+                $project: {
+                    _id: 0
+                }
+            }
+        ]).toArray();
+        res.send(data)
+
+    } catch (error) {
+        res.status(402).send("Error al ejecutar la consulta")
+    }
+})
+
+// 14. Mostrar los empleados con cargo de "Gerente" o "Asistente". 
+// http://127.10.10.10:5500/empleado/multiple_cargo
+storageEmpleado.get("/multiple_cargo", configGET(), async(req, res) => {
+    try {
+        let { cargo } = req.params
+        let tabla = db.collection("empleado");
+        let data = await tabla.aggregate([
+            {
+                $match: {
+                    Cargo: { $in: [ "Gerente", "Asistente" ] }
+                }
+            },
+            {
+                $project: {
+                    _id: 0
+                }
+            }
+        ]).toArray();
+        res.send(data)
+
+    } catch (error) {
+        res.status(402).send("Error al ejecutar la consulta")
+    }
+})
+
+// ---------------------------------------------------------------------------------------------------------------
 export default storageEmpleado;

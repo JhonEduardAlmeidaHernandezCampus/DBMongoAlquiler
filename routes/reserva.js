@@ -1,11 +1,13 @@
 import { Router } from 'express'
 import { con } from '../db/connect.js'
 import { configGET } from '../middleware/limit.js'
+import { validarEstructura, validarData } from '../middleware/middlewareReserva.js'
+import { validarParams } from '../middleware/validarID.js'
 
 let storageReserva = Router()
 let db = await con()
 
-storageReserva.get("/", configGET(), async(req, res) => {
+storageReserva.get("/", configGET(), validarEstructura, async(req, res) => {
     try {
         let tabla = db.collection("reserva");
         let data = await tabla.find().toArray();
@@ -18,56 +20,61 @@ storageReserva.get("/", configGET(), async(req, res) => {
 
 /*
     {
-        ID_Reserva: 1,
-        ID_Cliente_ID_Cliente: 1,
-        ID_Automovil_ID_Automovil: 1,
-        Fecha_Reserva: new Date("2023-08-12"),
-        Fecha_Inicio: new Date("2023-08-12"),
-        Fecha_Fin: new Date("2023-08-12"),
-        Estado: "Activo"
+        "ID": 1,
+        "ID_Client": 1,
+        "ID_Car": 1,
+        "Date_Reservation": "2023-08-10",
+        "Date_Start": "2023-08-11",
+        "Date_End": "2023-08-31",
+        "Status": "Activo"
     }
 */
-storageReserva.post("/", configGET(), async(req, res) => {
+storageReserva.post("/", configGET(), validarEstructura, validarData, async(req, res) => {
     try {
         let tabla = db.collection("reserva")
         await tabla.insertOne(req.body);
         console.log(req.rateLimit);
-        res.send("Reserva creada con exito")
+
+        res.send({status: 200, message: "Registro creado con exito"})
 
     } catch (error) {
-        res.status(400).send(error.errInfo.details.schemaRulesNotSatisfied[0].propertiesNotSatisfied[0].description)
+        res.send({status: 400, message: "" + error.errInfo.details.schemaRulesNotSatisfied[0].propertiesNotSatisfied[0].description})
     }
 })
 
-// storageReserva.put("/:id", async(req, res) => {
-//     try {
-//         let { id } = req.params;
-//         let collection = db.collection("reserva")
-//         let res = await collection.bulkWrite([
-//             {
-//                 updateOne: {
-//                     filter: { _ID_Sucursal: Object.values(id) },
-//                     update: { $set: req.body }
-//                 }
-//             }
-//         ])
-//         res.send("Registro actualizado con exito")
+storageReserva.put("/:ID", configGET(), validarEstructura, validarParams, validarData, async(req, res) => {
+    try {
 
-//     } catch (error) {
-//         res.status(400).send("Error al actualizar el registro")
-//     }
-// })
+        let id = req.params
+        id = parseInt(id)
 
-// storageReserva.delete("/:id", async(req, res) => {
-//     try {
-//         let { id } = req.params;
-//         let collection = db.collection("reserva")
-//         let res = await collection.deleteOne({_ID_Sucursal: id})
-//         res.send("Registro eliminado con exito")
+        let collection = db.collection("reserva")
+        let respuesta = await collection.updateOne (
+            { ID_Reserva: id },
+            { $set: req.body }
+        )
+                
+        res.send({status: 200, message: "Registro actualizado con exito"})
 
-//     } catch (error) {
-//         res.status(400).send("Error al eliminar el registro")
-//     }
-// })
+    } catch (error) {
+        res.send({status: 400, message: "" + error.errInfo.details.schemaRulesNotSatisfied[0].propertiesNotSatisfied[0].description})
+    }
+})
+
+storageReserva.delete("/:ID", configGET(), validarEstructura, validarParams, async(req, res) => {
+    try {
+
+        let id = req.params
+        id = parseInt(id)
+
+        let collection = db.collection("reserva")
+        let respuesta = await collection.deleteOne({ID_Reserva: id})
+
+        res.send({status: 200, message: "Registro eliminado exitosamente"})
+
+    } catch (error) {
+        res.send({status: 400, message: "Error al eliminar el registro"})
+    }
+})
 
 export default storageReserva;

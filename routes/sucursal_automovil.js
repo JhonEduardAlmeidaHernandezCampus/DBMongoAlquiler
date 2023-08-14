@@ -1,11 +1,13 @@
-import { Router } from 'express'
-import { con } from '../db/connect.js'
-import { configGET } from '../middleware/limit.js'
+import { Router } from 'express';
+import { con } from '../db/connect.js';
+import { configGET } from '../middleware/limit.js';
+import { validarEstructura, validarData } from '../middleware/middlewareSucursalAutomovil.js';
+import { validarParams } from '../middleware/validarID.js';
 
 let storageSucursalAutomovil = Router()
 let db = await con()
 
-storageSucursalAutomovil.get("/", configGET(), async(req, res) => {
+storageSucursalAutomovil.get("/", configGET(), validarEstructura, async(req, res) => {
     try {
         let tabla = db.collection("sucursal_automovil");
         let data = await tabla.find().toArray();
@@ -18,52 +20,57 @@ storageSucursalAutomovil.get("/", configGET(), async(req, res) => {
 
 /*
     {
-        "ID_Sucursal_ID_Sucursal": 1,
-        "ID_Automovil_ID_Automovil": 1,
-        "Cantidad_Disponible": 10
+        "ID": 1,
+        "ID_Car": 1,
+        "Quantity_Available": 14
     }
 */
-storageSucursalAutomovil.post("/", configGET(), async(req, res) => {
+storageSucursalAutomovil.post("/", configGET(), validarEstructura, validarData, async(req, res) => {
     try {
         let tabla = db.collection("sucursal_automovil")
         await tabla.insertOne(req.body);
         console.log(req.rateLimit);
-        res.send("Sucursal de automovil creada con exito")
+
+        res.send({status: 200, message: "Registro creado con exito"})
 
     } catch (error) {
-        res.status(400).send(error.errInfo.details.schemaRulesNotSatisfied[0].propertiesNotSatisfied[0].description)
+        res.send({status: 400, message: "" + error.errInfo.details.schemaRulesNotSatisfied[0].propertiesNotSatisfied[0].description})
     }
 })
 
-// storageSucursalAutomovil.put("/:id", async(req, res) => {
-//     try {
-//         let { id } = req.params;
-//         let collection = db.collection("sucursal_automovil")
-//         let res = await collection.bulkWrite([
-//             {
-//                 updateOne: {
-//                     filter: { _ID_Sucursal: Object.values(id) },
-//                     update: { $set: req.body }
-//                 }
-//             }
-//         ])
-//         res.send("Registro actualizado con exito")
+storageSucursalAutomovil.put("/:ID", configGET(), validarEstructura, validarParams, validarData, async(req, res) => {
+    try {
 
-//     } catch (error) {
-//         res.status(400).send("Error al actualizar el registro")
-//     }
-// })
+        let id = req.params;
+        id = parseInt(id);
 
-// storageSucursalAutomovil.put("/:id", async(req, res) => {
-//     try {
-//         let { id } = req.params;
-//         let collection = db.collection("sucursal_automovil")
-//         let res = await collection.deleteOne({_ID_Sucursal: id})
-//         res.send("Registro eliminado con exito")
+        let collection = db.collection("sucursal_automovil")
+        let respuesta = await collection.updateOne( 
+            { ID_Sucursal_ID_Sucursal: id },
+            { $set: req.body }
+        )
 
-//     } catch (error) {
-//         res.status(400).send("Error al eliminar el registro")
-//     }
-// })
+        res.send({status: 200, message: "Registro actualizado con exito"})
+
+    } catch (error) {
+        res.send({status: 400, message: "" + error.errInfo.details.schemaRulesNotSatisfied[0].propertiesNotSatisfied[0].description})
+    }
+})
+
+storageSucursalAutomovil.put("/:ID", async(req, res) => {
+    try {
+
+        let id = req.params;
+        id = parseInt(id);
+
+        let collection = db.collection("sucursal_automovil")
+        let res = await collection.deleteOne({ID_Sucursal_ID_Sucursal: id})
+
+        res.send({status: 200, message: "Registro eliminado con exito"})
+
+    } catch (error) {
+        res.send({status: 400, message: "Error al eliminar el registro"})
+    }
+})
 
 export default storageSucursalAutomovil;
