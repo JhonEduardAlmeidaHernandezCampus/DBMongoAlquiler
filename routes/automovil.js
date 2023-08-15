@@ -135,11 +135,31 @@ storageAutomovil.get("/cantidad_total", configGET(), validarEstructura, async(re
                 }
             },
             {
+                $unwind: "$fk_automovil_sucursal_automovil"
+            },
+            {
                 $lookup: {
                   from: "sucursal",
                   localField: "fk_automovil_sucursal_automovil.ID_Sucursal_ID_Sucursal",
                   foreignField: "_ID_Sucursal",
                   as: "fk_automovil_sucursal"
+                }
+            },
+            {
+                $unwind: "$fk_automovil_sucursal"
+            },
+            {
+                $group: {
+                    _id: "$_ID_Automovil",
+                    _ID_Automovil: { $first: "$_ID_Automovil" },
+                    Marca: { $first: "$Marca" },
+                    Modelo: { $first: "$Modelo" },
+                    Tipo: { $first: "$Tipo" },
+                    Capacidad: { $first: "$Capacidad" },
+                    Precio_Diario: { $first: "$Precio_Diario" },
+                    "fk_automovil_sucursal_automovil": { $push: "$fk_automovil_sucursal_automovil" },
+                    "total_Automoviles": { $sum: "$fk_automovil_sucursal_automovil.Cantidad_Disponible" },
+                    "fk_automovil_sucursal": { $push: "$fk_automovil_sucursal" }
                 }
             },
             {
@@ -150,6 +170,11 @@ storageAutomovil.get("/cantidad_total", configGET(), validarEstructura, async(re
                   "fk_automovil_sucursal_automovil.ID_Automovil_ID_Automovil": 0,
                   "fk_automovil_sucursal._id": 0,
                 }
+            },
+            {
+                $sort: {
+                    _ID_Automovil: +1
+                } 
             }
         ]).toArray();
         res.send(data)
