@@ -29,5 +29,5 @@ app.use("/reserva", validarToken, storageReserva);
 app.use("/registro_devolucion", validarToken, storageRegistroDevolucion);
 app.use("/registro_entrega", validarToken, storageRegistroEntrega);
 
-let config = JSON.parse(process.env.Server)
+let config = JSON.parse(process.env.MY_CONFIG)
 app.listen(config, () => console.log(`http://${config.hostname}:${config.port}`))
