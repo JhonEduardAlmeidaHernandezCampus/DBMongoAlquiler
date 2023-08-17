@@ -8,7 +8,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { Expose, Transform } from 'class-transformer';
-import { IsDefined } from 'class-validator';
 export class Reserva {
     constructor(data) {
         Object.assign(this, data);
@@ -23,64 +22,92 @@ export class Reserva {
 }
 __decorate([
     Expose({ name: 'ID' }),
-    IsDefined({ message: () => { throw { status: 422, message: `ID is required` }; } }),
-    Transform(({ value }) => { if (Math.floor(value) && typeof value == "number")
-        return Math.floor(value);
-    else
-        throw { status: 400, message: `Error en los parametros` }; }, { toClassOnly: true }),
+    Transform(({ value }) => {
+        if (value === undefined || value === null) {
+            throw { status: 422, message: `ID is required` };
+        }
+        if (Math.floor(value) && typeof value == "number")
+            return Math.floor(value);
+        else
+            throw { status: 400, message: `Error en los parametros` };
+    }, { toClassOnly: true }),
     __metadata("design:type", Number)
 ], Reserva.prototype, "ID_Reserva", void 0);
 __decorate([
     Expose({ name: 'ID_Client' }),
-    IsDefined({ message: () => { throw { status: 422, message: `ID_Client is required` }; } }),
-    Transform(({ value }) => { if (Math.floor(value) && typeof value == "number")
-        return Math.floor(value);
-    else
-        throw { status: 400, message: `Error en los parametros` }; }, { toClassOnly: true }),
+    Transform(({ value }) => {
+        if (value === undefined || value === null) {
+            throw { status: 422, message: `ID_Client is required` };
+        }
+        if (Math.floor(value) && typeof value == "number")
+            return Math.floor(value);
+        else
+            throw { status: 400, message: `Error en los parametros` };
+    }, { toClassOnly: true }),
     __metadata("design:type", Number)
 ], Reserva.prototype, "ID_Cliente_ID_Cliente", void 0);
 __decorate([
     Expose({ name: 'ID_Car' }),
-    IsDefined({ message: () => { throw { status: 422, message: `ID_Car is required` }; } }),
-    Transform(({ value }) => { if (Math.floor(value) && typeof value == "number")
-        return Math.floor(value);
-    else
-        throw { status: 400, message: `Error en los parametros` }; }, { toClassOnly: true }),
+    Transform(({ value }) => {
+        if (value === undefined || value === null) {
+            throw { status: 422, message: `ID_Car is required` };
+        }
+        if (Math.floor(value) && typeof value == "number")
+            return Math.floor(value);
+        else
+            throw { status: 400, message: `Error en los parametros` };
+    }, { toClassOnly: true }),
     __metadata("design:type", Number)
 ], Reserva.prototype, "ID_Automovil_ID_Automovil", void 0);
 __decorate([
     Expose({ name: 'Date_Reservation' }),
-    IsDefined({ message: () => { throw { status: 422, message: `Date_Reservation is required` }; } }),
-    Transform(({ value }) => { if (/^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|1\d|2\d|3[01])$/.test(value))
-        return value;
-    else
-        throw { status: 400, message: `Error en los parametros` }; }, { toClassOnly: true }),
+    Transform(({ value }) => {
+        if (value === undefined || value === null) {
+            throw { status: 422, message: `Date_Reservation is required` };
+        }
+        if (/^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|1\d|2\d|3[01])$/.test(value))
+            return value;
+        else
+            throw { status: 400, message: `Error en los parametros` };
+    }, { toClassOnly: true }),
     __metadata("design:type", String)
 ], Reserva.prototype, "Fecha_Reserva", void 0);
 __decorate([
     Expose({ name: 'Date_Start' }),
-    IsDefined({ message: () => { throw { status: 422, message: `Date_Start is required` }; } }),
-    Transform(({ value }) => { if (/^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|1\d|2\d|3[01])$/.test(value))
-        return value;
-    else
-        throw { status: 400, message: `Error en los parametros` }; }, { toClassOnly: true }),
+    Transform(({ value }) => {
+        if (value === undefined || value === null) {
+            throw { status: 422, message: `Date_Start is required` };
+        }
+        if (/^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|1\d|2\d|3[01])$/.test(value))
+            return value;
+        else
+            throw { status: 400, message: `Error en los parametros` };
+    }, { toClassOnly: true }),
     __metadata("design:type", String)
 ], Reserva.prototype, "Fecha_Inicio", void 0);
 __decorate([
     Expose({ name: 'Date_End' }),
-    IsDefined({ message: () => { throw { status: 422, message: `Date_End is required` }; } }),
-    Transform(({ value }) => { if (/^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|1\d|2\d|3[01])$/.test(value))
-        return value;
-    else
-        throw { status: 400, message: `Error en los parametros` }; }, { toClassOnly: true }),
+    Transform(({ value }) => {
+        if (value === undefined || value === null) {
+            throw { status: 422, message: `Date_End is required` };
+        }
+        if (/^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|1\d|2\d|3[01])$/.test(value))
+            return value;
+        else
+            throw { status: 400, message: `Error en los parametros` };
+    }, { toClassOnly: true }),
     __metadata("design:type", String)
 ], Reserva.prototype, "Fecha_Fin", void 0);
 __decorate([
     Expose({ name: 'Status' }),
-    IsDefined({ message: () => { throw { status: 422, message: `Status is required` }; } }),
-    Transform(({ value }) => { if (/^[a-zA-Z\s]+$/.test(value))
-        return value;
-    else
-        throw { status: 400, message: `Error en los parametros` }; }, { toClassOnly: true }),
+    Transform(({ value }) => {
+        if (value === undefined || value === null) {
+            throw { status: 422, message: `Status is required` };
+        }
+        if (/^[a-zA-Z\s]+$/.test(value))
+            return value;
+        else
+            throw { status: 400, message: `Error en los parametros` };
+    }, { toClassOnly: true }),
     __metadata("design:type", String)
 ], Reserva.prototype, "Estado", void 0);

@@ -8,7 +8,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { Expose, Transform } from 'class-transformer';
-import { IsDefined } from 'class-validator';
 export class Sucursal_Automovil {
     constructor(data) {
         Object.assign(this, data);
@@ -19,28 +18,40 @@ export class Sucursal_Automovil {
 }
 __decorate([
     Expose({ name: 'ID' }),
-    IsDefined({ message: () => { throw { status: 422, message: `ID is required` }; } }),
-    Transform(({ value }) => { if (Math.floor(value) && typeof value == "number")
-        return Math.floor(value);
-    else
-        throw { status: 400, message: `Error en los parametros` }; }, { toClassOnly: true }),
+    Transform(({ value }) => {
+        if (value === undefined || value === null) {
+            throw { status: 422, message: `ID is required` };
+        }
+        if (Math.floor(value) && typeof value == "number")
+            return Math.floor(value);
+        else
+            throw { status: 400, message: `Error en los parametros` };
+    }, { toClassOnly: true }),
     __metadata("design:type", Number)
 ], Sucursal_Automovil.prototype, "ID_Sucursal_ID_Sucursal", void 0);
 __decorate([
     Expose({ name: 'ID_Car' }),
-    IsDefined({ message: () => { throw { status: 422, message: `ID_Car is required` }; } }),
-    Transform(({ value }) => { if (Math.floor(value) && typeof value == "number")
-        return Math.floor(value);
-    else
-        throw { status: 400, message: `Error en los parametros` }; }, { toClassOnly: true }),
+    Transform(({ value }) => {
+        if (value === undefined || value === null) {
+            throw { status: 422, message: `ID_Car is required` };
+        }
+        if (Math.floor(value) && typeof value == "number")
+            return Math.floor(value);
+        else
+            throw { status: 400, message: `Error en los parametros` };
+    }, { toClassOnly: true }),
     __metadata("design:type", Number)
 ], Sucursal_Automovil.prototype, "ID_Automovil_ID_Automovil", void 0);
 __decorate([
     Expose({ name: 'Quantity_Available' }),
-    IsDefined({ message: () => { throw { status: 422, message: `Quantity_Available is required` }; } }),
-    Transform(({ value }) => { if (Math.floor(value) && typeof value == "number")
-        return Math.floor(value);
-    else
-        throw { status: 400, message: `Error en los parametros` }; }, { toClassOnly: true }),
+    Transform(({ value }) => {
+        if (value === undefined || value === null) {
+            throw { status: 422, message: `Quantity_Available is required` };
+        }
+        if (Math.floor(value) && typeof value == "number")
+            return Math.floor(value);
+        else
+            throw { status: 400, message: `Error en los parametros` };
+    }, { toClassOnly: true }),
     __metadata("design:type", Number)
 ], Sucursal_Automovil.prototype, "Cantidad_Disponible", void 0);

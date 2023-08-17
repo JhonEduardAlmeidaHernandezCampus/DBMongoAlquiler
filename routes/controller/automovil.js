@@ -8,7 +8,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { Expose, Transform } from 'class-transformer';
-import { IsDefined } from 'class-validator';
 export class Automovil {
     constructor(data) {
         Object.assign(this, data);
@@ -23,64 +22,92 @@ export class Automovil {
 }
 __decorate([
     Expose({ name: 'ID' }),
-    IsDefined({ message: () => { throw { status: 422, message: `ID is required` }; } }),
-    Transform(({ value }) => { if (Math.floor(value) && typeof value == "number")
-        return Math.floor(value);
-    else
-        throw { status: 400, message: `Error en los parametros` }; }, { toClassOnly: true }),
+    Transform(({ value }) => {
+        if (value === undefined || value === null) {
+            throw { status: 422, message: `ID is required` };
+        }
+        if (Math.floor(value) && typeof value == "number")
+            return Math.floor(value);
+        else
+            throw { status: 400, message: `Error en los parametros` };
+    }, { toClassOnly: true }),
     __metadata("design:type", Number)
 ], Automovil.prototype, "_ID_Automovil", void 0);
 __decorate([
     Expose({ name: 'Brand' }),
-    IsDefined({ message: () => { throw { status: 422, message: `Brand is required` }; } }),
-    Transform(({ value }) => { if (/^[a-z-A-Z\s]+$/.test(value))
-        return value;
-    else
-        throw { status: 400, message: `Error en los parametros` }; }, { toClassOnly: true }),
+    Transform(({ value }) => {
+        if (value === undefined || value === null) {
+            throw { status: 422, message: `Brand is required` };
+        }
+        if (/^[a-z-A-Z\s]+$/.test(value))
+            return value;
+        else
+            throw { status: 400, message: `Error en los parametros` };
+    }, { toClassOnly: true }),
     __metadata("design:type", String)
 ], Automovil.prototype, "Marca", void 0);
 __decorate([
     Expose({ name: 'Model' }),
-    IsDefined({ message: () => { throw { status: 422, message: `Model is required` }; } }),
-    Transform(({ value }) => { if (/^[a-z-A-Z\s]+$/.test(value))
-        return value;
-    else
-        throw { status: 400, message: `Error en los parametros` }; }, { toClassOnly: true }),
+    Transform(({ value }) => {
+        if (value === undefined || value === null) {
+            throw { status: 422, message: `Model is required` };
+        }
+        if (/^[a-z-A-Z\s]+$/.test(value))
+            return value;
+        else
+            throw { status: 400, message: `Error en los parametros` };
+    }, { toClassOnly: true }),
     __metadata("design:type", String)
 ], Automovil.prototype, "Modelo", void 0);
 __decorate([
     Expose({ name: 'Year' }),
-    IsDefined({ message: () => { throw { status: 422, message: `Year is required` }; } }),
-    Transform(({ value }) => { if (Math.floor(value) && typeof value == "number")
-        return Math.floor(value);
-    else
-        throw { status: 400, message: `Error en los parametros` }; }, { toClassOnly: true }),
+    Transform(({ value }) => {
+        if (value === undefined || value === null) {
+            throw { status: 422, message: `Year is required` };
+        }
+        if (Math.floor(value) && typeof value == "number")
+            return Math.floor(value);
+        else
+            throw { status: 400, message: `Error en los parametros` };
+    }, { toClassOnly: true }),
     __metadata("design:type", Number)
 ], Automovil.prototype, "Anio", void 0);
 __decorate([
     Expose({ name: 'Type' }),
-    IsDefined({ message: () => { throw { status: 422, message: `Type is required` }; } }),
-    Transform(({ value }) => { if (/^[a-z-A-Z\s]+$/.test(value))
-        return value;
-    else
-        throw { status: 400, message: `Error en los parametros` }; }, { toClassOnly: true }),
+    Transform(({ value }) => {
+        if (value === undefined || value === null) {
+            throw { status: 422, message: `Type is required` };
+        }
+        if (/^[a-z-A-Z\s]+$/.test(value))
+            return value;
+        else
+            throw { status: 400, message: `Error en los parametros` };
+    }, { toClassOnly: true }),
     __metadata("design:type", String)
 ], Automovil.prototype, "Tipo", void 0);
 __decorate([
     Expose({ name: 'Capacity' }),
-    IsDefined({ message: () => { throw { status: 422, message: `Capacity is required` }; } }),
-    Transform(({ value }) => { if (Math.floor(value) && typeof value == "number")
-        return Math.floor(value);
-    else
-        throw { status: 400, message: `Error en los parametros` }; }, { toClassOnly: true }),
+    Transform(({ value }) => {
+        if (value === undefined || value === null) {
+            throw { status: 422, message: `Capacity is required` };
+        }
+        if (Math.floor(value) && typeof value == "number")
+            return Math.floor(value);
+        else
+            throw { status: 400, message: `Error en los parametros` };
+    }, { toClassOnly: true }),
     __metadata("design:type", Number)
 ], Automovil.prototype, "Capacidad", void 0);
 __decorate([
     Expose({ name: 'Daily_Price' }),
-    IsDefined({ message: () => { throw { status: 422, message: `Daily_Price is required` }; } }),
-    Transform(({ value }) => { if (Math.floor(value) && typeof value == "number")
-        return Math.floor(value);
-    else
-        throw { status: 400, message: `Error en los parametros` }; }, { toClassOnly: true }),
+    Transform(({ value }) => {
+        if (value === undefined || value === null) {
+            throw { status: 422, message: `Daily_Price is required` };
+        }
+        if (Math.floor(value) && typeof value == "number")
+            return Math.floor(value);
+        else
+            throw { status: 400, message: `Error en los parametros` };
+    }, { toClassOnly: true }),
     __metadata("design:type", Number)
 ], Automovil.prototype, "Precio_Diario", void 0);
