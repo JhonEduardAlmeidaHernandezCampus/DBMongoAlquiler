@@ -4,7 +4,7 @@ import { IsDefined } from 'class-validator';
 export class Alquiler {
 
     @Expose({ name: 'ID' })
-    @IsDefined({message: ()=>{ throw {status: 422, message: `ID_Client is required`}}})
+    @IsDefined({message: ()=>{ throw {status: 422, message: `ID_Client is required`}}}) 
     @Transform(({value}) => {if(Math.floor(value) && typeof value == "number") return Math.floor(value); else throw {status: 400, message: `Error en los parametros`};}, {toClassOnly: true})
     _ID_Alquiler: number;
     
