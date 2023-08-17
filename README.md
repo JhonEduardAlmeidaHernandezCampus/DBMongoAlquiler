@@ -45,8 +45,8 @@ npm install;
    - Define las siguientes variables de entorno:
 
 ```
-MY_CONFIG = {"hostname": "", "port": }
-MY_CONNECT = {"user": "", "password": "", "database": "db_campus_alquiler"}
+MY_CONFIG = {"hostname": "127.10.10.10", "port": 5500}
+MY_CONNECT = {"user": "Jhon", "password": "123", "database": "db_campus_alquiler"}
 JWT_KEY = ""
 ```
 
